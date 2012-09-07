@@ -1,0 +1,8 @@
+alignment_for_selector_in_method_invocation:int:52
+comment_clear_blank_lines_in_block_comment:boolean:true
+comment_clear_blank_lines_in_javadoc_comment:boolean:true
+continuation_indentation:int:1
+continuation_indentation_for_array_initializer:int:1
+insert_new_line_at_end_of_file_if_missing:boolean:true
+#tab_char:int:2
+tab_size:int:4
