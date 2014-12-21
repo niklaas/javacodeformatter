@@ -121,7 +121,9 @@ public class Formatter {
 
     /**
      * Formats all files in the given directory. Formatted files are written to
-     * new files starting with "formatted_".
+     * new files starting with "formatted_". 
+	  *
+	  * EDIT: They now write to the original file
      *
      * @param dir directory of files to format
      * @param recurse true to format files in subdirectories too
@@ -130,9 +132,10 @@ public class Formatter {
         throws MalformedTreeException, BadLocationException, IOException {
         Collection<File> files = FileUtils.listFiles(dir, EXTENSIONS, recurse);
         for (File f : files) {
-            String formattedCode = format(FileUtils.readFileToString(f));
-            File f2 = new File(f.getParentFile(), "formatted_" + f.getName());
-            FileUtils.writeStringToFile(f2, formattedCode);
+			  String formattedCode = format(FileUtils.readFileToString(f));
+			  //File f2 = new File(f.getParentFile(), "formatted_" + f.getName());
+			  File f2 = new File(f.getParentFile(), "" + f.getName());
+			  FileUtils.writeStringToFile(f2, formattedCode);
         }
     }
 
@@ -151,9 +154,9 @@ public class Formatter {
 
         DefaultCodeFormatterOptions cfOptions =
             DefaultCodeFormatterOptions.getJavaConventionsSettings();
-        modifyCFOptions(cfOptions);
         cfOptions.tab_char = DefaultCodeFormatterOptions.SPACE;
-
+			  
+		  modifyCFOptions(cfOptions); //let modify overwrite even tab_char
         CodeFormatter cf = new DefaultCodeFormatter(cfOptions, options);
 
         TextEdit te = cf.format(CodeFormatter.K_UNKNOWN, code, 0,
