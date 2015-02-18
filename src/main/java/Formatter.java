@@ -132,10 +132,14 @@ public class Formatter {
         throws MalformedTreeException, BadLocationException, IOException {
         Collection<File> files = FileUtils.listFiles(dir, EXTENSIONS, recurse);
         for (File f : files) {
-			  String formattedCode = format(FileUtils.readFileToString(f));
-			  //File f2 = new File(f.getParentFile(), "formatted_" + f.getName());
-			  File f2 = new File(f.getParentFile(), "" + f.getName());
-			  FileUtils.writeStringToFile(f2, formattedCode);
+			  try {
+				  String formattedCode = format(FileUtils.readFileToString(f));
+				  //File f2 = new File(f.getParentFile(), "formatted_" + f.getName());
+				  File f2 = new File(f.getParentFile(), "" + f.getName());
+				  FileUtils.writeStringToFile(f2, formattedCode);
+			  } catch( Throwable e ) {
+				  throw new RuntimeException("Exception at file: "+f.getParentFile()+"/"+f.getName(), e);
+			  }
         }
     }
 
@@ -147,6 +151,11 @@ public class Formatter {
      */
     public String format(String code)
         throws MalformedTreeException, BadLocationException {
+			
+			  if( code == null || code.length() <= 0 ) {
+				  return "";
+			  }
+		  
         Map options = new java.util.HashMap();
         options.put(JavaCore.COMPILER_SOURCE, "1.5");
         options.put(JavaCore.COMPILER_COMPLIANCE, "1.5");
@@ -158,9 +167,18 @@ public class Formatter {
 			  
 		  modifyCFOptions(cfOptions); //let modify overwrite even tab_char
         CodeFormatter cf = new DefaultCodeFormatter(cfOptions, options);
-
+			
+			  if(cf == null) {
+				  throw new RuntimeException("Failed to load CodeFormatter class object");
+			  }
+			  
         TextEdit te = cf.format(CodeFormatter.K_UNKNOWN, code, 0,
                                 code.length(), 0, null);
+			  
+			  if(te == null) {
+				  throw new RuntimeException("Failed to load TextEdit class object");
+			  }
+			  
         IDocument dc = new Document(code);
 
         te.apply(dc);
