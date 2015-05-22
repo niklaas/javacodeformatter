@@ -157,9 +157,9 @@ public class Formatter {
 			  }
 		  
         Map options = new java.util.HashMap();
-        options.put(JavaCore.COMPILER_SOURCE, "1.5");
-        options.put(JavaCore.COMPILER_COMPLIANCE, "1.5");
-        options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, "1.5");
+        options.put(JavaCore.COMPILER_SOURCE, "1.8");
+        options.put(JavaCore.COMPILER_COMPLIANCE, "1.8");
+        options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, "1.8");
 
         DefaultCodeFormatterOptions cfOptions =
             DefaultCodeFormatterOptions.getJavaConventionsSettings();
@@ -170,6 +170,7 @@ public class Formatter {
 			
 			  if(cf == null) {
 				  throw new RuntimeException("Failed to load CodeFormatter class object");
+				  //return code;
 			  }
 			  
         TextEdit te = cf.format(CodeFormatter.K_UNKNOWN, code, 0,
@@ -177,6 +178,7 @@ public class Formatter {
 			  
 			  if(te == null) {
 				  throw new RuntimeException("Failed to load TextEdit class object");
+				  //return code;
 			  }
 			  
         IDocument dc = new Document(code);
