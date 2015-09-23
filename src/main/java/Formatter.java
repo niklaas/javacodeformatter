@@ -68,7 +68,11 @@ public class Formatter {
     }
 
     // For tab_char, 1 = TAB, 2 = SPACE, 4 = MIXED. Use 2 because tabs are evil.
-
+    //
+    // or so the original author thinks, we here love them =)
+    // as they work very nicely project wide with a lint (like this program)
+    //
+	
     /**
      * Parses code formatter options. Each line specifies an option as:
      * &lt;field name&gt;:&lt;type&gt;:&lt;value&gt;. Each option references
@@ -122,8 +126,8 @@ public class Formatter {
     /**
      * Formats all files in the given directory. Formatted files are written to
      * new files starting with "formatted_". 
-	  *
-	  * EDIT: They now write to the original file
+     *
+     * EDIT: They now write to the original file
      *
      * @param dir directory of files to format
      * @param recurse true to format files in subdirectories too
@@ -132,14 +136,14 @@ public class Formatter {
         throws MalformedTreeException, BadLocationException, IOException {
         Collection<File> files = FileUtils.listFiles(dir, EXTENSIONS, recurse);
         for (File f : files) {
-			  try {
-				  String formattedCode = format(FileUtils.readFileToString(f));
-				  //File f2 = new File(f.getParentFile(), "formatted_" + f.getName());
-				  File f2 = new File(f.getParentFile(), "" + f.getName());
-				  FileUtils.writeStringToFile(f2, formattedCode);
-			  } catch( Throwable e ) {
-				  throw new RuntimeException("Exception at file: "+f.getParentFile()+"/"+f.getName(), e);
-			  }
+           try {
+              String formattedCode = format(FileUtils.readFileToString(f));
+              //File f2 = new File(f.getParentFile(), "formatted_" + f.getName());
+              File f2 = new File(f.getParentFile(), "" + f.getName());
+              FileUtils.writeStringToFile(f2, formattedCode);
+           } catch( Throwable e ) {
+              throw new RuntimeException("Exception at file: "+f.getParentFile()+"/"+f.getName(), e);
+           }
         }
     }
 
@@ -151,11 +155,11 @@ public class Formatter {
      */
     public String format(String code)
         throws MalformedTreeException, BadLocationException {
-			
-			  if( code == null || code.length() <= 0 ) {
-				  return "";
-			  }
-		  
+         
+		  if( code == null || code.length() <= 0 ) {
+           return "";
+        }
+        
         Map options = new java.util.HashMap();
         options.put(JavaCore.COMPILER_SOURCE, "1.8");
         options.put(JavaCore.COMPILER_COMPLIANCE, "1.8");
@@ -164,25 +168,25 @@ public class Formatter {
         DefaultCodeFormatterOptions cfOptions =
             DefaultCodeFormatterOptions.getJavaConventionsSettings();
         cfOptions.tab_char = DefaultCodeFormatterOptions.SPACE;
-			  
-		  modifyCFOptions(cfOptions); //let modify overwrite even tab_char
+           
+        modifyCFOptions(cfOptions); //let modify overwrite even tab_char
         CodeFormatter cf = new DefaultCodeFormatter(cfOptions, options);
-			
-			  if(cf == null) {
-				  throw new RuntimeException("Failed to load CodeFormatter class object");
-				  //return code;
-			  }
-			  
+         
+        if(cf == null) {
+           throw new RuntimeException("Failed to load CodeFormatter class object");
+           //return code;
+        }
+           
         TextEdit te = cf.format(CodeFormatter.K_UNKNOWN, code, 0,
                                 code.length(), 0, null);
-			  
-			  if(te == null) {
-				  throw new RuntimeException("Failed to load TextEdit class object");
-				  //return code;
-			  }
-			  
+           
+        if(te == null) {
+           throw new RuntimeException("Failed to load TextEdit class object");
+           //return code;
+        }
+		  
         IDocument dc = new Document(code);
-
+			  
         te.apply(dc);
         return dc.get();
     }
