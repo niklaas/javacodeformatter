@@ -68,7 +68,7 @@ public class Formatter {
     }
 
     // For tab_char, 1 = TAB, 2 = SPACE, 4 = MIXED. Use 2 because tabs are evil.
-   
+
     /**
      * Parses code formatter options. Each line specifies an option as:
      * &lt;field name&gt;:&lt;type&gt;:&lt;value&gt;. Each option references
@@ -121,7 +121,7 @@ public class Formatter {
 
     /**
      * Formats all files in the given directory. Formatted files are written to
-     * new files starting with "formatted_". 
+     * new files starting with "formatted_".
      *
      * @param dir directory of files to format
      * @param recurse true to format files in subdirectories too
@@ -130,9 +130,9 @@ public class Formatter {
         throws MalformedTreeException, BadLocationException, IOException {
         Collection<File> files = FileUtils.listFiles(dir, EXTENSIONS, recurse);
         for (File f : files) {
-              String formattedCode = format(FileUtils.readFileToString(f));
+            String formattedCode = format(FileUtils.readFileToString(f));
             File f2 = new File(f.getParentFile(), "formatted_" + f.getName());
-              FileUtils.writeStringToFile(f2, formattedCode);
+            FileUtils.writeStringToFile(f2, formattedCode);
         }
     }
 
@@ -178,7 +178,7 @@ public class Formatter {
         }
         
         IDocument dc = new Document(code);
-           
+
         te.apply(dc);
         return dc.get();
     }
