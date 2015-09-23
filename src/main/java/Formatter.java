@@ -68,7 +68,7 @@ public class Formatter {
     }
 
     // For tab_char, 1 = TAB, 2 = SPACE, 4 = MIXED. Use 2 because tabs are evil.
-
+   
     /**
      * Parses code formatter options. Each line specifies an option as:
      * &lt;field name&gt;:&lt;type&gt;:&lt;value&gt;. Each option references
@@ -121,7 +121,7 @@ public class Formatter {
 
     /**
      * Formats all files in the given directory. Formatted files are written to
-     * new files starting with "formatted_".
+     * new files starting with "formatted_". 
      *
      * @param dir directory of files to format
      * @param recurse true to format files in subdirectories too
@@ -130,9 +130,9 @@ public class Formatter {
         throws MalformedTreeException, BadLocationException, IOException {
         Collection<File> files = FileUtils.listFiles(dir, EXTENSIONS, recurse);
         for (File f : files) {
-            String formattedCode = format(FileUtils.readFileToString(f));
+              String formattedCode = format(FileUtils.readFileToString(f));
             File f2 = new File(f.getParentFile(), "formatted_" + f.getName());
-            FileUtils.writeStringToFile(f2, formattedCode);
+              FileUtils.writeStringToFile(f2, formattedCode);
         }
     }
 
@@ -144,22 +144,41 @@ public class Formatter {
      */
     public String format(String code)
         throws MalformedTreeException, BadLocationException {
+         
+        if( code == null || code.length() <= 0 ) {
+           return "";
+        }
+        
         Map options = new java.util.HashMap();
-        options.put(JavaCore.COMPILER_SOURCE, "1.5");
-        options.put(JavaCore.COMPILER_COMPLIANCE, "1.5");
-        options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, "1.5");
+        options.put(JavaCore.COMPILER_SOURCE, "1.8");
+        options.put(JavaCore.COMPILER_COMPLIANCE, "1.8");
+        options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, "1.8");
 
         DefaultCodeFormatterOptions cfOptions =
             DefaultCodeFormatterOptions.getJavaConventionsSettings();
-        modifyCFOptions(cfOptions);
+         
+        // Let default be spaces, the sanner default for most projects without project wide lints
         cfOptions.tab_char = DefaultCodeFormatterOptions.SPACE;
-
+        
+        // Let modify config file overwrite even tab_char settings, for those who want tabs however
+        modifyCFOptions(cfOptions);
         CodeFormatter cf = new DefaultCodeFormatter(cfOptions, options);
-
+         
+        if(cf == null) {
+           throw new RuntimeException("Failed to load CodeFormatter class object");
+           //return code;
+        }
+           
         TextEdit te = cf.format(CodeFormatter.K_UNKNOWN, code, 0,
                                 code.length(), 0, null);
+           
+        if(te == null) {
+           throw new RuntimeException("Failed to load TextEdit class object");
+           //return code;
+        }
+        
         IDocument dc = new Document(code);
-
+           
         te.apply(dc);
         return dc.get();
     }
