@@ -5,6 +5,8 @@ The Java code here uses Eclipse's code formatting capability to format Java
 code. You don't need Eclipse installed to use it; the build bundles all of the
 Eclipse libraries necessary.
 
+Note: This has been udpated to support JAVA 8
+
 Building
 --------
 
@@ -33,9 +35,33 @@ You can pass a file name instead of using standard input.
 
     $ java -cp java-formatter-jar-with-dependencies.jar sample.opts src/java
 
+
+Running against directory
+--------------------------
+
 If you pass a directory, the formatter will recursively format all Java files
-in the directory. Formatted code is written to new files prefixed with
-"formatted_", e.g., formatted_MyFile.java is the formatted form of MyFile.java.
+in the directory. And replace them. (Original creates a "formatted_" prefix)
+
+Useful usage?
+--------------------------
+
+We currently use this with ANT, as below (modify as needed)
+
+	<!-- Code Beautifier, used for pre-commit hook -->
+	<target name="src-beautify">
+		<!-- Scan and beautify the code -->
+		<exec executable="java">
+			<arg value="-cp"/>
+			<arg value="./build-tools/java-formatter/java-formatter-with-dependencies.jar"/>
+			<arg value="Formatter"/>
+			<arg value="./build-config/code-format.opts"/>
+			<arg value="./src"/>
+		</exec>
+	</target>
+
+Such that `ant src-beautify` is called as part of the build / commit flow. Which helps ends
+all the individual programmers on the team space/tabs/brackets wars. Use whatever you want on
+your own branch, master branch will however follow a standard team format.
 
 Credits
 -------
@@ -43,3 +69,7 @@ Credits
 The formatter is heavily based on work published here:
 
 https://ssscripting.wordpress.com/2009/06/10/how-to-use-the-eclipse-code-formatter-from-your-code/
+
+And was formally turned into a jar here:
+
+https://github.com/kbzod/javacodeformatter
