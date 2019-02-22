@@ -64,12 +64,6 @@ public class Formatter {
     }
   }
 
-  // For tab_char, 1 = TAB, 2 = SPACE, 4 = MIXED. Use 2 because tabs are evil.
-  //
-  // or so the original author thinks, we here love them =)
-  // as they work very nicely project wide with a lint (like this program)
-  //
-
   /**
    * Parses code formatter options. Each line specifies an option as: &lt;field
    * name&gt;:&lt;type&gt;:&lt;value&gt;. Each option references a public field in Eclipse's <code>
