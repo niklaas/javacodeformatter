@@ -37,10 +37,10 @@ public class Formatter {
             (Formatter.parseCodeFormatterOptions(cfoLines));
 
         String formattedCode;
-        if (args.length < 2) {
+        if (args.length < 2) {  // format stdin
             formattedCode = f.format(IOUtils.toString(System.in));
             System.out.println(formattedCode);
-        } else {
+        } else {  // format provided file/directory
             File file = new File(args[1]);
             if (!(file.isDirectory())) {
                 formattedCode = f.format(FileUtils.readFileToString(file));
