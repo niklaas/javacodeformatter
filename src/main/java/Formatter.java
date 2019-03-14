@@ -31,23 +31,30 @@ public class Formatter {
    */
   public static void main(String[] args) throws Exception {
     Formatter f = new Formatter();
-    String cfofn = args[0];
-    List<String> cfoLines = FileUtils.readLines(new File(cfofn));
-    f.setCodeFormatterOptionsMap(Formatter.parseCodeFormatterOptions(cfoLines));
+    String formatOptionsFileName = args[0];
 
-    String formattedCode;
-    if (args.length < 2) { // format stdin
-      formattedCode = f.format(IOUtils.toString(System.in));
+    List<String> formatOptionsLines = FileUtils.readLines(new File(formatOptionsFileName));
+    f.setCodeFormatterOptionsMap(Formatter.parseCodeFormatterOptions(formatOptionsLines));
+
+    // format stdin (return formatted code to stdout)
+    if (args.length < 2) {
+      String formattedCode = f.format(IOUtils.toString(System.in));
       System.out.println(formattedCode);
-    } else { // format provided file/directory
-      File file = new File(args[1]);
-      if (!(file.isDirectory())) {
-        formattedCode = f.format(FileUtils.readFileToString(file));
-        System.out.println(formattedCode);
-      } else {
-        f.formatInDirectory(file, true);
-      }
+      return;
     }
+
+    String filename = args[1];
+    File file = new File(filename);
+
+    // format directory (creates new files with formatted code)
+    if (file.isDirectory()) {
+      f.formatInDirectory(file, true);
+      return;
+    }
+
+    // format file (return formatted code to stdout)
+    String formattedCode = f.format(FileUtils.readFileToString(file));
+    System.out.println(formattedCode);
   }
 
   private Map<String, Object> codeFormatterOptionsMap = new java.util.HashMap<String, Object>();
