@@ -15,7 +15,7 @@ Building
 Running
 -------
 
-    $ java -cp java-formatter-jar-with-dependencies.jar sample.opts
+    $ java -cp java-formatter-jar-with-dependencies.jar Formatter sample.opts
 
 The only required argument is a file listing code formatter options for
 Eclipse's `DefaultCodeFormatterOptions` class that should be applied over the
@@ -29,11 +29,11 @@ are ignored.
 When run like the above, the formatter reads code from standard input.
 Formatted code is written to standard output.
 
-    $ java -cp java-formatter-jar-with-dependencies.jar sample.opts MyFile.java
+    $ java -cp java-formatter-jar-with-dependencies.jar Formatter sample.opts MyFile.java
 
 You can pass a file name instead of using standard input.
 
-    $ java -cp java-formatter-jar-with-dependencies.jar sample.opts src/java
+    $ java -cp java-formatter-jar-with-dependencies.jar Formatter sample.opts src/java
 
 
 Running against directory
